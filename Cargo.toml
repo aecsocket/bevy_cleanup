@@ -17,7 +17,7 @@ derive = [ "dep:bevy_cleanup_derive" ]
 
 [dependencies]
 bevy = { version = "0.11.2", default-features = false }
-bevy_cleanup_derive = { path = "./bevy_cleanup_derive", optional = true }
+bevy_cleanup_derive = { path = "./bevy_cleanup_derive", version = "0.1.0", optional = true }
 
 [workspace]
 members = [ "bevy_cleanup_derive" ]
