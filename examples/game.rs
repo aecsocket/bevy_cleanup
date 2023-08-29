@@ -1,21 +1,19 @@
 use std::time::Duration;
 
-use bevy::{prelude::*, app::ScheduleRunnerPlugin};
-use bevy_cleanup::{Cleanup, AddStateCleanup};
+use bevy::{app::ScheduleRunnerPlugin, prelude::*};
+use bevy_cleanup::{AddStateCleanup, Cleanup};
 
 fn main() {
     // Boring setup stuff
     App::new()
-        .add_plugins(
-            MinimalPlugins.set(
-                // Just to make the println's slower
-                ScheduleRunnerPlugin::run_loop(Duration::from_millis(500)),
-            )
-        )
+        .add_plugins(MinimalPlugins.set(
+            // Just to make the println's slower
+            ScheduleRunnerPlugin::run_loop(Duration::from_millis(500)),
+        ))
         //
         .add_state::<AppState>()
         // When transitioning *out* of `AppState::Menu`, all entities with `CleanupMenu`
-        // And all children of that entity are recursively removed. 
+        // And all children of that entity are recursively removed.
         .add_state_cleanup::<_, CleanupMenu>(AppState::Menu)
         // Same for `AppState::Game` and `CleanupGame`.
         .add_state_cleanup::<_, CleanupGame>(AppState::Game)
@@ -34,7 +32,7 @@ fn main() {
             (
                 update_menu.run_if(in_state(AppState::Menu)),
                 damage_over_time.run_if(in_state(AppState::Game)),
-            )
+            ),
         )
         .run()
 }
