@@ -42,6 +42,11 @@ pub trait Cleanup: Component {}
 pub trait AddStateCleanup {
     /// When the state `variant` is exited ([`OnExit`]), all entities which have component `C`
     /// will be recursively despawned.
+    /// 
+    /// You do not have to add a state cleanup to *every* `S` variant, just the ones you want to
+    /// despawn entities for when you exit that variant. So if you know you won't be adding any
+    /// entities during a state (e.g. a `LoadGame` state), then don't bother adding state cleanup
+    /// to it.
     ///
     /// # Examples
     ///
@@ -84,9 +89,71 @@ impl AddStateCleanup for App {
 
 #[cfg(test)]
 mod tests {
+    use bevy::prelude::*;
+
+    use super::{Cleanup, AddStateCleanup};
+    use crate as bevy_cleanup;
+
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, States)]
+    enum AppState {
+        #[default]
+        Menu,
+        Game,
+    }
+
+    #[derive(Component, Cleanup)]
+    struct CleanupMenu;
+
+    #[derive(Component, Cleanup)]
+    struct CleanupGame;
+
+    fn setup_menu(mut commands: Commands) {
+        commands.spawn(CleanupMenu);
+    }
+
+    fn setup_game(mut commands: Commands) {
+        commands.spawn(CleanupGame);
+        commands.spawn(CleanupGame);
+    }
+
+    fn app() -> App {
+        let mut app = App::new();
+        app
+            .add_state::<AppState>()
+            .add_state_cleanup::<_, CleanupMenu>(AppState::Menu)
+            .add_state_cleanup::<_, CleanupGame>(AppState::Game)
+            .add_systems(OnEnter(AppState::Menu), setup_menu)
+            .add_systems(OnEnter(AppState::Game), setup_game);
+        app
+    }
+
     #[test]
-    fn test() {
-        let x = 3;
-        println!("{}", x);
+    fn remove_on_exit() {
+        let mut app = app();
+        assert_eq!(0, app.world.entities().len());
+        
+        app.update();
+        assert_eq!(1, app.world.entities().len());
+
+        app.insert_resource(NextState(Some(AppState::Game)));
+        app.update();
+        assert_eq!(2, app.world.entities().len());
+
+        app.insert_resource(NextState(Some(AppState::Menu)));
+        app.update();
+        assert_eq!(1, app.world.entities().len());
+    }
+
+    #[test]
+    fn remove_on_reenter() {
+        let mut app = app();
+        assert_eq!(0, app.world.entities().len());
+
+        app.update();
+        assert_eq!(1, app.world.entities().len());
+
+        app.insert_resource(NextState(Some(AppState::Menu)));
+        app.update();
+        assert_eq!(1, app.world.entities().len());
     }
 }

@@ -2,6 +2,13 @@
 name = "bevy_cleanup_derive"
 version = "0.1.0"
 edition = "2021"
+description = "Derive macros for bevy_cleanup"
+authors = [ "aecsocket <aecsocket@tutanota.com>" ]
+repository = "https://github.com/aecsocket/bevy_cleanup"
+keywords = [ "gamedev", "bevy" ]
+categories = [ "game-development" ]
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
 
 [lib]
 proc-macro = true
