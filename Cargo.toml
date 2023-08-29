@@ -1,0 +1,23 @@
+[package]
+name = "bevy_cleanup"
+version = "0.1.0"
+edition = "2021"
+description = "Cleanup design pattern for Bevy"
+authors = [ "aecsocket <aecsocket@tutanota.com>" ]
+repository = "https://github.com/aecsocket/bevy_cleanup"
+keywords = [ "gamedev", "bevy" ]
+categories = [ "game-development" ]
+license = "MIT OR Apache-2.0"
+
+[features]
+default = [ "derive" ]
+
+## Allows using the `Cleanup` derive macro.
+derive = [ "dep:bevy_cleanup_derive" ]
+
+[dependencies]
+bevy = { version = "0.11.2", default-features = false }
+bevy_cleanup_derive = { path = "./bevy_cleanup_derive", optional = true }
+
+[workspace]
+members = [ "bevy_cleanup_derive" ]
