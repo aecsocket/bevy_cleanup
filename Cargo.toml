@@ -2,7 +2,7 @@
 name = "bevy_cleanup"
 version = "0.1.0"
 edition = "2021"
-description = "Cleanup design pattern for Bevy"
+description = "Cleanup design pattern tools for Bevy"
 authors = [ "aecsocket <aecsocket@tutanota.com>" ]
 repository = "https://github.com/aecsocket/bevy_cleanup"
 keywords = [ "gamedev", "bevy" ]

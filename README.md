@@ -1,6 +1,7 @@
 # bevy_cleanup
 
 [![crates.io](https://img.shields.io/crates/v/bevy_cleanup.svg)](https://crates.io/crates/bevy_cleanup)
+[![docs.rs](https://img.shields.io/docsrs/bevy_cleanup)](https://docs.rs/bevy_cleanup)
 
 Providers helpers for using the cleanup design pattern in Bevy, where entities are automatically
 removed after a state transition, depending on any `Cleanup` marker components they have.
@@ -47,7 +48,7 @@ fn setup_menu(mut commands: Commands) {
 
 // When you want to switch from Menu to Game...
 fn switch_to_game(mut next_state: ResMut<NextState<AppState>>) {
-    // After this, any entities with the cleanup component of the current state (CleanupMenu)
+    // After this, any entities with the cleanup component of the current state (`CleanupMenu`)
     // will be automatically recursively despawned.
     next_state.set(AppState::Game);
 }
